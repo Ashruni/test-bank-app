@@ -24,7 +24,7 @@
 
     <tr>
         <td class="border border-gray-400 px-4 py-2">Current Balance</td>
-        <td class="border border-gray-400 px-4 py-2"> kkk </td>
+        <td class="border border-gray-400 px-4 py-2"> {{$totalBalances}} </td>
     </tr>
   </tbody>
 </table>
