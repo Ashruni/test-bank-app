@@ -49,10 +49,13 @@
     <form action="/deposits" method="POST">
         @csrf
     <label class="block text-xl font-medium leading-6 text-gray-900">Amount</label><br>
-    <input style="width:400px;" min="1" max="1000000" type="number" name="deposits" id="deposits" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="enter the amount">
+    <input style="width:400px;"  type="number" name="deposits" id="deposits" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="enter the amount">
 
         <span class="text-red-500"></span>
-    <br>
+    @error('deposits')
+        <span class="text-red-500" >{{ $message }}</span>
+    @enderror<br>
+
     <button type="submit" class="custom-button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ">Submit</button>
 
   </div>
