@@ -16,7 +16,7 @@
     <div id="error-message" class="alert alert-danger" style="background-color:#ff9999" >
 
     </div> -->
-
+@auth
 <div style="margin-left:450px; margin-top:100px;">
   <label for="price" class="block text-xl font-medium leading-6 text-gray-900">Withdraw Money</label><br>
   <div class="relative mt-2 rounded-md shadow-sm">
@@ -35,6 +35,6 @@
 
   </div>
 </div>
-
+@endauth
 </body>
 </html>

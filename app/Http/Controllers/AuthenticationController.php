@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Operation;
+use Illuminate\Validation\ValidationException;
 
 class AuthenticationController
 {
@@ -33,5 +35,22 @@ class AuthenticationController
     public function destroy(){
         auth()->logout();
         return redirect('/login');
+    }
+    public function check(){
+        $credentials = request()->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|min:8|max:50',
+        ]);
+
+        if (! auth()->attempt($credentials))
+        {
+            throw ValidationException::withMessages([
+                'email'=>'your provided credentials could not be verified'
+            ]);
+        }
+
+        session()->regenerate();
+            return redirect('/')->with('success','Welcome Back' );
+
     }
 }

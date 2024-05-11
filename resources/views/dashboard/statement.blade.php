@@ -23,7 +23,7 @@ tr:nth-child(even) {
 </head>
 <body>
     @include('components.nav')
-
+@auth
 <h1>Statement</h1>
 
 <table>
@@ -63,7 +63,8 @@ tr:nth-child(even) {
     <td>Italy</td>
   </tr>
 </table>
-
+@endauth
 </body>
+
 </html>
 

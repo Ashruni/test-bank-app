@@ -6,6 +6,17 @@
     <title>Document</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<script>
+     document.addEventListener('DOMContentLoaded', function () {
+        // After 2 seconds, remove the success message
+        setTimeout(function () {
+            var successMessage = document.getElementById('success-message');
+            if (successMessage) {
+                successMessage.remove();
+            }
+        }, 2000); // 2000 milliseconds = 2 seconds
+    });
+</script>
 <body>
     @include('components.nav')
 
@@ -17,6 +28,17 @@
 
     </div> -->
 
+    @if(session('success'))
+    <div id="success-message" class="alert alert-success" style="background-color:#C7CD8C;">
+        {{ session('success') }}
+    </div>
+@endif
+@if(session('error'))
+    <div id="error-message" class="alert alert-danger" style="background-color:#ff9999" >
+        {{ session('error') }}
+    </div>
+@endif
+@auth
 <div style="margin-left:450px; margin-top:100px;">
   <label for="price" class="block text-xl font-medium leading-6 text-gray-900">Deposit Money</label><br>
   <div class="relative mt-2 rounded-md shadow-sm">
@@ -27,7 +49,7 @@
     <form action="/deposits" method="POST">
         @csrf
     <label class="block text-xl font-medium leading-6 text-gray-900">Amount</label><br>
-    <input style="width:400px;" type="number" name="deposits" id="deposits" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="enter the amount">
+    <input style="width:400px;" min="1" max="1000000" type="number" name="deposits" id="deposits" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="enter the amount">
 
         <span class="text-red-500"></span>
     <br>
@@ -35,6 +57,6 @@
 
   </div>
 </div>
-
+@endauth
 </body>
 </html>
