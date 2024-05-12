@@ -128,7 +128,7 @@ class DashboardController
 
         $userId = Auth()->user()->id;
         $currentEmail= Auth()->user()->email;
-        if($transferValidation['transfers'] < $balanceBeforeTransaction){
+        if($transferValidation['transfers'] <= $balanceBeforeTransaction){
             if($email != $currentEmail){
                 if($balanceAfterTransaction >=0){
                     $balanceAfterTransaction = $balanceBeforeTransaction - $transferValidation['transfers'];
@@ -154,8 +154,8 @@ class DashboardController
 
     public function statement()
     {
-        // DB::
-        return view('dashboard.statement');
+
+        return view('dashboard.statement',['details'=>Bank::simplePaginate(10)]);
     }
     public function show()
     {
