@@ -55,20 +55,26 @@ class DashboardController
                 'withdrawal.max' => 'The deposits amount must not exceed 30,000,000.'
             ]
         );
-        $userId = Auth()->Id();
+        // $email = $withdrawal['email'];
+         $email= Auth()->user()->email;
+         $userId = Auth()->id;
         $deposits = DB::table('banks')->where('user_id', $userId)->sum('deposits');
         $withdraws = DB::table('banks')->where('user_id', $userId)->sum('withdrawals');
-
+        $deficitAmount = DB::table('banks')->where('user_id', $userId)->whereNotNull('transfers')->whereNotNull('email')->sum('transfers');
+        $surplusAmount = DB::table('banks')->where('email', $email)->whereNotNull('transfers')->sum('transfers');
         $deposits = intval($deposits);
         $withdraws = intval($withdraws);
+        $surplusAmount = intval($surplusAmount);
+        $deficitAmount = intval($deficitAmount);
+
+        $balanceBeforeTransaction  = ($deposits + $surplusAmount) - ($withdraws + $deficitAmount);
+        // DD($balanceBeforeTransaction);
+        $balanceAfterTransaction = $balanceBeforeTransaction - $withdrawal['$withdrawal'];
+
         // $currentBalance = ($deposits - $withdraws);
+        // $currentBalance = $currentBalance - $withdrawal['withdrawal'];
 
-
-
-        $currentBalance = ($deposits - $withdraws);
-        $currentBalance = $currentBalance - $withdrawal['withdrawal'];
-
-        if ($currentBalance >= 0) {
+        if ($balanceAfterTransaction >= 0) {
             $withdraw = Bank::create(
                 [
                     'withdrawals' => $withdrawal['withdrawal'],
@@ -98,39 +104,49 @@ class DashboardController
             [
                 'transfers.min' => 'The deposits amount must be at least 1 rupee.',
                 'transfers.max' => 'The deposits amount must not exceed 30,000,000.',
+                'email.exists'=>'This email does not exist in our records',
+                'email.required' =>'This field is required'
             ]
         );
         $email = $transferValidation['email'];
         $currentEmail = $userId = Auth()->user()->email;
         $deposits = DB::table('banks')->where('user_id', $userId)->sum('deposits');
         $withdraws = DB::table('banks')->where('user_id', $userId)->sum('withdrawals');
-        $transfers = DB::table('banks')->where('user_id',$userId)->sum('transfers');
-
+        $deficitAmount = DB::table('banks')->where('user_id', $userId)->whereNotNull('transfers')->whereNotNull('email')->sum('transfers');
+        $surplusAmount = DB::table('banks')->where('email', $email)->whereNotNull('transfers')->sum('transfers');
         $deposits = intval($deposits);
         $withdraws = intval($withdraws);
-        $transfers = intval($transfers);
-        $currentTotal = (($deposits + $transfers)- $withdraws);
-        // DD('$currentTotal ');
-        $currentBalance = $currentTotal - $transfers;
+        $surplusAmount = intval($surplusAmount);
+        $deficitAmount = intval($deficitAmount);
+
+
+        $balanceBeforeTransaction  = ($deposits + $surplusAmount) - ($withdraws + $deficitAmount);
+        // DD($balanceBeforeTransaction);
+        $balanceAfterTransaction = $balanceBeforeTransaction - $transferValidation['transfers'];
+        // DD( $balanceAfterTransaction);
+
 
         $userId = Auth()->id();
-        if($transferValidation) {
-            if ($email != $currentEmail && $currentBalance>=0){
+        if ($transferValidation && $balanceBeforeTransaction > 0) {
+            if ($email != $currentEmail) {
+                if ($balanceAfterTransaction >= 0) {
                     Bank::create([
-                        'email'=> $email,
-                        'transfers'=>$transferValidation['transfers'],
-                        'user_id'=>$userId
-                   ]);
-                   $currentBalance = (($deposits + $transfers)- $withdraws);
-                   return redirect('/transfer')->with('success','Successfully transferred');
+                        'email' => $email,
+                        'transfers' => $transferValidation['transfers'],
+                        'user_id' => $userId,
+                    ]);
+                    $balanceAfterTransaction = $balanceBeforeTransaction - $transferValidation['transfers'];
+                    return redirect('/transfer')->with('success', 'Successfully transferred');
+                } else {
+                    return redirect('/transfer')->with('error', 'Insufficient bank balance');
                 }
-             else
-             {
-                return redirect('/transfer')->with('error', 'You cant sent to yourself ');
-             }
-            return redirect('/transfer');
+            } else {
+                return redirect('/transfer')->with('error', 'Enter the recipient email address');
+            }
+            return redirect('/transfer')->with('error', 'Something went wrong');
         }
     }
+    //
 
     public function statement()
     {
@@ -138,12 +154,19 @@ class DashboardController
     }
     public function show()
     {
-        $userId = Auth()->id();
+        $email = Auth()->user()->email;
+        $userId = Auth()->id;
         $deposits = DB::table('banks')->where('user_id', $userId)->sum('deposits');
         $withdraws = DB::table('banks')->where('user_id', $userId)->sum('withdrawals');
+        $deficitAmount = DB::table('banks')->where('user_id', $userId)->whereNotNull('transfers')->whereNotNull('email')->sum('transfers');
+        $surplusAmount = DB::table('banks')->where('email', $email)->whereNotNull('transfers')->sum('transfers');
         $deposits = intval($deposits);
-        $withdraw = intval($withdraws);
-        $totalBalances = ($deposits - $withdraw);
-        return view('dashboard.home')->with('totalBalances', $totalBalances);
+        $withdraws = intval($withdraws);
+        $surplusAmount = intval($surplusAmount);
+        $deficitAmount = intval($deficitAmount);
+
+
+        $currentTransaction  = ($deposits + $surplusAmount) - ($withdraws + $deficitAmount);
+        return view('dashboard.home')->with('totalBalances',$currentTransaction);
     }
 }
