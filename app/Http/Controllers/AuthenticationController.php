@@ -24,7 +24,7 @@ class AuthenticationController
         $user = User::create($validatedUser);
         auth()->login($user);
         if ($validatedUser) {
-            return redirect('/');
+            return redirect('/')->with('success', 'Registered successfully,Welcome To your new account');
         } else {
             return redirect('/register')->with('error', 'Something went wrong');
         }
