@@ -64,13 +64,13 @@
     <form action="/transfer" method="POST">
         @csrf
         <label class="block text-xl font-xs leading-6 text-gray-900">Email</label>
-    <input style="width:400px;" type="email" name="email" id="email" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="enter the email">
+    <input style="width:400px;" type="email" name="email" id="email" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="enter the email" value="{{ old('email') }}">
     @error('email')
         <span class="text-red-500" >{{ $message }}</span>
     @enderror<br>
 
     <label class="block text-xl font-xs leading-6 text-gray-900">Amount</label>
-    <input style="width:400px;" type="number" name="transfers" id="transfers" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="enter the amount">
+    <input style="width:400px;" type="number" name="transfers" id="transfers" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="enter the amount"value="{{ old('transfers') }}">
         <span class="text-red-500"></span>
     @error('transfers')
         <span class="text-red-500" >{{ $message }}</span>
