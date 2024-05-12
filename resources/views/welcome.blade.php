@@ -45,7 +45,7 @@
         @auth
         @include('components.nav')
         @if(session('success'))
-    <div id="success-message" class="alert alert-success" style="background-color:#C7CD8C;">
+    <div id="success-message" class="alert alert-success" style="background-color:#98a4d5;">
         {{ session('success') }}
     </div>
     @endif
