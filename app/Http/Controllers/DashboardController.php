@@ -152,10 +152,24 @@ class DashboardController
         }
     }
 
+
     public function statement()
     {
 
-        return view('dashboard.statement',['details'=>Bank::simplePaginate(10)]);
+        $userId = Auth()->user()->id;
+        $email = Auth()->user()->email;
+        $userId = Auth()->user()->id;
+        $deposits = DB::table('banks')->where('user_id', $userId)->sum('deposits');
+        $withdraws = DB::table('banks')->where('user_id', $userId)->sum('withdrawals');
+        $deficitAmount = DB::table('banks')->where('user_id', $userId)->whereNotNull('transfers')->whereNotNull('email')->sum('transfers');
+        $surplusAmount = DB::table('banks')->where('email', $email)->whereNotNull('transfers')->sum('transfers');
+        $deposits = intval($deposits);
+        $withdraws = intval($withdraws);
+        $surplusAmount = intval($surplusAmount);
+        $deficitAmount = intval($deficitAmount);
+        $currentTransaction  = ($deposits + $surplusAmount) - ($withdraws + $deficitAmount);
+
+        return view('dashboard.statement',['details'=>Bank::where('user_id', $userId)->simplePaginate(5)])->with('currentTransactions',$currentTransaction);
     }
     public function show()
     {
