@@ -9,6 +9,7 @@ Route::get('/register',[App\Http\Controllers\AuthenticationController::class,'sh
 Route::post('/register',[App\Http\Controllers\AuthenticationController::class,'create'])->middleware('guest');
 
 Route::get('/dashboard',[App\Http\Controllers\DashboardController::class,'show']);
+
 Route::get('/deposits',[App\Http\Controllers\DashboardController::class,'deposit'])->name('deposit');
 Route::post('/deposits',[App\Http\Controllers\DashboardController::class,'storeDeposits']);
 
@@ -17,6 +18,7 @@ Route::post('/withdraw',[App\Http\Controllers\DashboardController::class,'defici
 
 Route::get('/transfer',[App\Http\Controllers\DashboardController::class,'transfer'])->name('transfer');
 Route::post('/transfer',[App\Http\Controllers\DashboardController::class,'transferAmount']);
+
 Route::get('/statement',[App\Http\Controllers\DashboardController::class,'statement'])->name('statement');
 
 Route::get('/login',[App\Http\Controllers\AuthenticationController::class,'login'])->middleware('guest');
